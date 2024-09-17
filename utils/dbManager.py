@@ -1,4 +1,4 @@
-#TODO: DBManager отвечает за взаимодействие с базой данных: создание таблиц, генерацию ключа шифрования,
+# TODO: DBManager отвечает за взаимодействие с базой данных: создание таблиц, генерацию ключа шифрования,
 # шифрование и дешифрование паролей, добавление, получение и удаление паролей. Этот класс не имеет никакого
 # отношения к графическому интерфейсу.
 import sqlite3
@@ -15,14 +15,11 @@ class DBManager:
         self.create_passwords_table()  # Создаем таблицу для хранения паролей
 
     def create_metadata_table(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS metadata
-                          (key BLOB)''')
+        self.c.execute('''CREATE TABLE IF NOT EXISTS metadata (key BLOB)''')
         self.conn.commit()
 
     def create_passwords_table(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS passwords
-                          (service TEXT PRIMARY KEY, password BLOB)''')  # Используем BLOB для хранения зашифрованных
-        # паролей
+        self.c.execute('''CREATE TABLE IF NOT EXISTS passwords (service TEXT PRIMARY KEY, password BLOB)''')
         self.conn.commit()
 
     def get_or_create_key(self):
@@ -35,7 +32,6 @@ class DBManager:
             self.c.execute("INSERT INTO metadata (key) VALUES (?)", (new_key,))
             self.conn.commit()
             return new_key
-
 
     def add_password(self, service, encrypted_password):
         try:
@@ -55,8 +51,6 @@ class DBManager:
 
             # Возвращаем False в случае ошибки
             return False
-
-
 
     def get_password(self, service):
         self.c.execute("SELECT password FROM passwords WHERE service = ?", (service,))

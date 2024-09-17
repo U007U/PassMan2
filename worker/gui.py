@@ -4,9 +4,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter import PhotoImage
-from db_manager import DBManager
-from password_generator import generate_password
-from cryptography.fernet import Fernet  # Импортируем Fernet
+from utils.dbManager import DBManager
+from utils.passwordManager import generate_password
+from cryptography.fernet import Fernet
 
 
 #######################################################################################################################
@@ -17,7 +17,7 @@ class PasswordManagerApp(tk.Tk):
         self.geometry("700x400")
 
         # Установка значка окна
-        self.icon_image = PhotoImage(file="test_3.png")
+        self.icon_image = PhotoImage(file="../assets/app-icon.png")
         self.iconphoto(False, self.icon_image)
 
         self.db_manager = DBManager()
@@ -80,7 +80,7 @@ class PasswordManagerApp(tk.Tk):
     def on_right_click(self, event):
         selected_item = self.tree.selection()[0]  # Получаем выбранный элемент
         popup_menu = tk.Menu(self.tree, tearoff=0)  # Создаем всплывающее меню
-        #popup_menu.add_command(label="Показать пароль", command=self.show_password)
+        # popup_menu.add_command(label="Показать пароль", command=self.show_password)
         popup_menu.add_command(label="Удалить пароль", command=self.delete_password)
         popup_menu.add_command(label="Сгенерировать новый пароль", command=self.generate_new_password)
         popup_menu.post(event.x_root, event.y_root)  # Показываем меню в месте клика
@@ -193,8 +193,3 @@ class PasswordManagerApp(tk.Tk):
     def close(self):
         self.db_manager.close()  # Закрываем соединение с базой данных
         self.destroy()  # Уничтожаем главное окно приложения
-
-
-if __name__ == "__main__":
-    app = PasswordManagerApp()  # Создаем экземпляр класса PasswordManagerApp
-    app.mainloop()  # Запускаем главный цикл приложения
