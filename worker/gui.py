@@ -17,7 +17,7 @@ class PasswordManagerApp(tk.Tk):
         self.geometry("700x400")
 
         # Установка значка окна
-        self.icon_image = PhotoImage(file="../assets/app-icon.png")
+        self.icon_image = PhotoImage(file="assets/app-icon.png")
         self.iconphoto(False, self.icon_image)
 
         self.db_manager = DBManager()
@@ -28,7 +28,6 @@ class PasswordManagerApp(tk.Tk):
         self.password_visible = False  # Переменная для отслеживания видимости пароля
 
     def create_widgets(self):
-        # Фрейм для ввода данных
         input_frame = ttk.Frame(self)
         input_frame.pack(pady=10)
 
@@ -71,16 +70,14 @@ class PasswordManagerApp(tk.Tk):
         self.exit_button = ttk.Button(button_frame, text="Выход", command=self.close)
         self.exit_button.grid(row=0, column=4, padx=5)
 
-    def on_double_click(self, event):
+    def on_double_click(self):
         selected_item = self.tree.selection()[0]  # Получаем выбранный элемент
         service = self.tree.item(selected_item, "values")[0]  # Получаем название сервиса
         self.service_entry.delete(0, tk.END)  # Очищаем поле ввода
         self.service_entry.insert(0, service)  # Заполняем его названием сервиса
 
     def on_right_click(self, event):
-        selected_item = self.tree.selection()[0]  # Получаем выбранный элемент
         popup_menu = tk.Menu(self.tree, tearoff=0)  # Создаем всплывающее меню
-        # popup_menu.add_command(label="Показать пароль", command=self.show_password)
         popup_menu.add_command(label="Удалить пароль", command=self.delete_password)
         popup_menu.add_command(label="Сгенерировать новый пароль", command=self.generate_new_password)
         popup_menu.post(event.x_root, event.y_root)  # Показываем меню в месте клика

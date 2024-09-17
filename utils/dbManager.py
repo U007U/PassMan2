@@ -1,6 +1,6 @@
 # TODO: DBManager отвечает за взаимодействие с базой данных: создание таблиц, генерацию ключа шифрования,
-# шифрование и дешифрование паролей, добавление, получение и удаление паролей. Этот класс не имеет никакого
-# отношения к графическому интерфейсу.
+#   шифрование и дешифрование паролей, добавление, получение и удаление паролей. Этот класс не имеет никакого
+#   отношения к графическому интерфейсу.
 import sqlite3
 from cryptography.fernet import Fernet
 
@@ -27,11 +27,11 @@ class DBManager:
         key = self.c.fetchone()
         if key:
             return key[0]
-        else:
-            new_key = Fernet.generate_key()
-            self.c.execute("INSERT INTO metadata (key) VALUES (?)", (new_key,))
-            self.conn.commit()
-            return new_key
+
+        new_key = Fernet.generate_key()
+        self.c.execute("INSERT INTO metadata (key) VALUES (?)", (new_key,))
+        self.conn.commit()
+        return new_key
 
     def add_password(self, service, encrypted_password):
         try:
