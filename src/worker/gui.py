@@ -17,7 +17,7 @@ class PasswordManagerApp(tk.Tk):
         self.geometry("700x400")
 
         # Установка значка окна
-        self.icon_image = PhotoImage(file="assets/app-icon.png")
+        self.icon_image = PhotoImage(file="../assets/app-icon.png")
         self.iconphoto(False, self.icon_image)
 
         self.db_manager = DBManager()
