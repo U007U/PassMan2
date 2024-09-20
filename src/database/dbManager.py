@@ -5,7 +5,7 @@ from cryptography.fernet import Fernet
 from sqlalchemy import create_engine, select, insert, delete
 from sqlalchemy.orm import sessionmaker
 
-from dbModels import *
+from database.dbModels import *
 
 engine = create_engine("sqlite:///database.db")
 Base.metadata.create_all(engine)
@@ -28,7 +28,6 @@ def register_user(username: str, password: str) -> None:
 def login_user(username: str, password: str) -> bool:
     stmt = select(Metadata.user_name, Metadata.user_password)
     user_data = session.execute(stmt).fetchone()
-    print(user_data)
 
     return username == user_data[0] and bcrypt.checkpw(password.encode(), user_data[1])
 
@@ -43,11 +42,7 @@ def get_fernet_key() -> bytes:
     stmt = select(Metadata.fernet_key)
     result = session.execute(stmt).scalar()
 
-    try:
-        key = base64.b64decode(result)
-    except TypeError:
-        raise Exception("You need to register in order to use the program!")
-
+    key = base64.b64decode(result)
     return key
 
 
@@ -78,6 +73,6 @@ def add_credentials(service: str, login: str, password: str) -> None:
 
 
 def delete_credentials(service: str, login: str) -> None:
-    stmt = delete(Credentials).where(Credentials.service == service and Credentials.login == login)
+    stmt = delete(Credentials).where((Credentials.service == service) & (Credentials.login == login))
     session.execute(stmt)
     session.commit()
