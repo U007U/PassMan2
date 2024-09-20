@@ -39,7 +39,7 @@ def get_fernet_key() -> bytes:
     return key
 
 
-def get_credentials(service: str) -> None:
+def get_credentials(service: str) -> list:
     stmt = select(Credentials.login, Credentials.password).where(Credentials.service == service)
     credentials = session.execute(stmt).fetchall()
 
@@ -53,8 +53,7 @@ def get_credentials(service: str) -> None:
 
         result.append(credential)
 
-    print(result)
-    return (result)
+    return result
 
 
 def add_credentials(service: str, login: str, password: str) -> None:
