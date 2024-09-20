@@ -1,4 +1,6 @@
 import base64
+
+import bcrypt
 from cryptography.fernet import Fernet
 from sqlalchemy import create_engine, select, insert, delete
 from sqlalchemy.orm import sessionmaker
@@ -16,9 +18,19 @@ def register_user(username: str, password: str) -> None:
     key = Fernet.generate_key()
     encoded_key = base64.b64encode(key)
 
-    stmt = insert(Metadata).values(user_name=username, user_password=password, fernet_key=encoded_key)
+    encrypted_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+    stmt = insert(Metadata).values(user_name=username, user_password=encrypted_password, fernet_key=encoded_key)
     session.execute(stmt)
     session.commit()
+
+
+def login_user(username: str, password: str) -> bool:
+    stmt = select(Metadata.user_name, Metadata.user_password)
+    user_data = session.execute(stmt).fetchone()
+    print(user_data)
+
+    return username == user_data[0] and bcrypt.checkpw(password.encode(), user_data[1])
 
 
 def validate_credentials(username: str, password: str) -> bool:
@@ -47,9 +59,9 @@ def get_credentials(service: str) -> list:
 
     fernet = Fernet(get_fernet_key())
     for row in credentials:
-        credential = [row[0]]
+        credential = {"login": row[0]}
         decoded_password = base64.b64decode(row[1])
-        credential.append(fernet.decrypt(decoded_password).decode())
+        credential["password"] = (fernet.decrypt(decoded_password).decode())
 
         result.append(credential)
 
