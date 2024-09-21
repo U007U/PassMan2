@@ -19,6 +19,13 @@ class Metadata(Base):
     __tablename__ = 'metadata'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    user_name: Mapped[str] = mapped_column(String, nullable=False)
-    user_password: Mapped[str] = mapped_column(String, nullable=False)
     fernet_key: Mapped[str] = mapped_column(String, nullable=False)
+
+# Будущая версия таблицы Metadata, предназначенная для авторизации пользователей в самом приложении
+# class Metadata(Base):
+#     __tablename__ = 'metadata'
+#
+#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     user_name: Mapped[str] = mapped_column(String, nullable=False)
+#     user_password: Mapped[str] = mapped_column(String, nullable=False)
+#     fernet_key: Mapped[str] = mapped_column(String, nullable=False)
