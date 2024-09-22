@@ -16,7 +16,7 @@ class MainApp(tk.Tk):
         self.title("Менеджер паролей")
         self.geometry("700x400")
 
-        self.icon_image = PhotoImage(file="src/assets/app-icon.png")
+        self.icon_image = PhotoImage(file="assets/app-icon.png")
         self.iconphoto(False, self.icon_image)
 
         self.create_widgets()
