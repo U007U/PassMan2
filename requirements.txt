@@ -1,0 +1,7 @@
+pydantic~=2.9.2
+customtkinter~=5.2.2
+fastapi~=0.115.0
+uvicorn~=0.30.6
+SQLAlchemy~=2.0.35
+bcrypt~=4.2.0
+cryptography~=43.0.1
