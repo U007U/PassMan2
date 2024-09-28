@@ -1,3 +1,6 @@
+# TODO: PasswordManagerApp отвечает за создание графического интерфейса пользователя,обработку событий,
+#  взаимодействие с пользователем через всплывающие окнаи отображение данных в таблице Treeview. Этот класс
+#  использует методы класса DBManager для управления паролями.
 import os
 import string
 import random
@@ -45,7 +48,6 @@ class MainApp(ctk.CTk):
         self.add_button = ctk.CTkButton(input_frame, text="Создать пароль", command=self.add_password)
         self.add_button.grid(row=1, column=3, padx=5)
 
-
         # Создаем прокручиваемый фрейм для Treeview
         self.tree_frame = ctk.CTkScrollableFrame(self)
         self.tree_frame.pack(pady=10, fill=ctk.BOTH,
@@ -83,8 +85,6 @@ class MainApp(ctk.CTk):
         # Добавляем Treeview в окно
         self.tree.pack(fill=tk.BOTH, expand=True)  # Упаковываем Treeview, позволяя ему заполнять доступное пространство
 
-
-
         button_frame = ctk.CTkFrame(self)
         button_frame.pack(pady=10)
 
@@ -118,7 +118,6 @@ class MainApp(ctk.CTk):
             self.login_entry.delete(0, tk.END)
             self.login_entry.insert(0, login)
 
-
     def on_right_click(self, event):
         selected_item = self.tree.selection()  # Get selected item
         if selected_item:  # Check if an item is selected
@@ -148,13 +147,21 @@ class MainApp(ctk.CTk):
             return
 
         dbManager.add_credentials(service, login, password)
+
+        for item in list(self.tree.get_children()):
+            self.tree.delete(item)  # Clear existing items in the tree view
+
+        credentials = dbManager.get_all_credentials()
+        for row in credentials:
+            hidden_password = "*" * len(row[2])
+            self.tree.insert("", "end", values=(row[0], row[1], hidden_password))
+
         messagebox.showinfo("Успех", "Пароль успешно создан.")
 
         # Clear fields after adding
         self.service_entry.delete(0, tk.END)
         self.login_entry.delete(0, tk.END)
         self.password_entry.delete(0, tk.END)
-
 
     def show_password(self):
         # Получаем название сервиса из поля ввода
@@ -186,8 +193,6 @@ class MainApp(ctk.CTk):
                     messagebox.showerror("Ошибка", "Пароль не найден.")
         else:
             messagebox.showwarning("Выбор", "Пожалуйста, введите название сервиса.")
-
-
 
     def delete_password(self):
         selected_item = self.tree.selection()  # Get selected item
@@ -228,7 +233,6 @@ class MainApp(ctk.CTk):
 
             self.show_all_button.configure(text="Показать все пароли")
 
-
     def close(self):
         """Close the application."""
         self.destroy()
@@ -241,6 +245,3 @@ def generate_password() -> str:
     characters = string.ascii_letters + string.digits + string.punctuation
     password = ''.join(random.choice(characters) for _ in range(32))
     return password
-
-
-
